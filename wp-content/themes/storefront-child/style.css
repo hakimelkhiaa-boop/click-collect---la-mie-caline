@@ -1,0 +1,10 @@
+/**
+* Theme Name : Store Front Child
+* Template: storefront
+*/
+.bandeau-alert {
+  padding: 15px 0px;
+  text-align: center;
+  background: red;
+  color: white;
+}
