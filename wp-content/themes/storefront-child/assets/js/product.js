@@ -7,6 +7,7 @@ jQuery(function ($) {
     return;
   }
 
+  /* ----- Image et prix de la variation ----- */
   var original = {
     src: $image.attr('src'),
     srcset: $image.attr('srcset') || '',
@@ -38,5 +39,53 @@ jQuery(function ($) {
       alt: original.alt
     });
     $price.html(original.price);
+  });
+
+  /* ----- Options affichées en boutons ----- */
+  var buttonAttributes = ['choix-de-la-variete'];
+
+  $form.find('select').each(function () {
+    var select = this;
+    var $select = $(select);
+
+    if (buttonAttributes.indexOf(select.id) === -1) {
+      return;
+    }
+
+    var $group = $('<div class="options" role="group"></div>');
+    var label = $form.find('label[for="' + select.id + '"]').text();
+
+    $group.attr('aria-label', label);
+    $select.closest('tr').addClass('product-page__option-row');
+    $select.addClass('visually-hidden');
+    $select.after($group);
+
+    function render() {
+      $group.empty();
+
+      $select.find('option').each(function () {
+        if (!this.value) {
+          return;
+        }
+
+        var pressed = this.value === select.value;
+        var $button = $('<button type="button" class="options__button"></button>');
+
+        $button
+          .text($(this).text())
+          .attr('data-value', this.value)
+          .attr('aria-pressed', pressed ? 'true' : 'false');
+
+        $group.append($button);
+      });
+    }
+
+    $group.on('click', '.options__button', function () {
+      $select.val($(this).attr('data-value')).trigger('change');
+      render();
+    });
+
+    $form.on('woocommerce_update_variation_values reset_data', render);
+    render();
   });
 });
