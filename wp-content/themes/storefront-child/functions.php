@@ -88,7 +88,7 @@ function storefrontchild_category_carousel($current_id = 0, $modifier = '')
 add_action('wp_enqueue_scripts', function () {
     wp_enqueue_style(
         'storefront-child-fonts',
-        'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=Roboto+Condensed:wght@700&family=Yellowtail&display=swap',
+        'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=Roboto+Condensed:wght@400;700&family=Yellowtail&display=swap',
         array(),
         null
     );
@@ -115,6 +115,7 @@ add_action('wp_enqueue_scripts', function () {
         wp_get_theme()->get('Version'),
         true
     );
+
     if (function_exists('is_product') && is_product()) {
         wp_enqueue_script(
             'storefront-child-product',
@@ -124,6 +125,7 @@ add_action('wp_enqueue_scripts', function () {
             true
         );
     }
+
     if (function_exists('is_cart') && is_cart()) {
         wp_enqueue_script(
             'storefront-child-cart',
@@ -136,7 +138,7 @@ add_action('wp_enqueue_scripts', function () {
 });
 
 /**
- * Retire les éléments par défaut de Storefront (header, footer, fil d'Ariane).
+ * Retire les éléments par défaut de Storefront.
  */
 function storefrontchild_remove_storefront_parts()
 {
@@ -159,11 +161,13 @@ function storefrontchild_remove_storefront_parts()
 
     // Fil d'Ariane
     remove_action('storefront_before_content', 'woocommerce_breadcrumb', 10);
-    // Barre latérale et barre d'ajout au panier collante de Storefront
+
+    // Barres latérales et barre d'ajout au panier collante
     remove_action('woocommerce_sidebar', 'storefront_get_sidebar', 10);
-    remove_action('storefront_after_footer', 'storefront_sticky_single_add_to_cart', 999);
-    // Barre latérale des pages et message de panier vide par défaut
     remove_action('storefront_sidebar', 'storefront_get_sidebar', 10);
+    remove_action('storefront_after_footer', 'storefront_sticky_single_add_to_cart', 999);
+
+    // Message de panier vide par défaut
     remove_action('woocommerce_cart_is_empty', 'wc_empty_cart_message', 10);
 }
 add_action('init', 'storefrontchild_remove_storefront_parts');
@@ -351,17 +355,20 @@ add_action('storefront_footer', 'storefrontchild_render_footer', 10);
 
 /**
  * Ajoute une classe pour les pages en pleine largeur.
+ * NOUVEAU : is_checkout.
  */
 add_filter('body_class', function ($classes) {
-    $is_shop    = function_exists('is_shop') && (is_shop() || is_product_category());
-    $is_product = function_exists('is_product') && is_product();
-    $is_cart    = function_exists('is_cart') && is_cart();
+    $is_shop     = function_exists('is_shop') && (is_shop() || is_product_category());
+    $is_product  = function_exists('is_product') && is_product();
+    $is_cart     = function_exists('is_cart') && is_cart();
+    $is_checkout = function_exists('is_checkout') && is_checkout();
 
-    if (is_front_page() || $is_shop || $is_product || $is_cart) {
+    if (is_front_page() || $is_shop || $is_product || $is_cart || $is_checkout) {
         $classes[] = 'layout-wide';
     }
     return $classes;
 });
+
 /**
  * Affiche le prix juste avant le bouton "Ajouter au panier"
  * (produits simples et variables).
@@ -383,11 +390,81 @@ add_filter('woocommerce_dropdown_variation_attribute_options_args', function ($a
     $args['show_option_none'] = 'Choisir';
     return $args;
 });
+
 /**
- * Retire le titre de page de Storefront sur le panier.
+ * Retire le titre de page de Storefront sur le panier
+ * et sur la validation de commande (sauf la page de confirmation).
  */
 add_action('wp', function () {
-    if (function_exists('is_cart') && is_cart()) {
+    $is_cart     = function_exists('is_cart') && is_cart();
+    $is_checkout = function_exists('is_checkout') && is_checkout()
+        && function_exists('is_wc_endpoint_url') && ! is_wc_endpoint_url('order-received');
+
+    if ($is_cart || $is_checkout) {
         remove_action('storefront_page', 'storefront_page_header', 10);
     }
+});
+
+/* ==========================================================
+   NOUVEAU : IT-6, instructions pour le retrait (US-6.1)
+   ========================================================== */
+
+/**
+ * Texte des instructions de retrait (modifiable dans le back office).
+ */
+function storefrontchild_pickup_instructions()
+{
+    $default = "Présentez-vous en boutique avec votre numéro de commande.\nVotre commande vous sera remise au comptoir Click & Collect, à l'heure indiquée.";
+
+    return trim((string) get_option('storefrontchild_pickup_instructions', $default));
+}
+
+add_action('admin_menu', function () {
+    add_submenu_page(
+        'woocommerce',
+        'Instructions pour le retrait',
+        'Instructions de retrait',
+        'manage_options',
+        'storefrontchild-pickup',
+        'storefrontchild_pickup_admin_page'
+    );
+});
+
+add_action('admin_init', function () {
+    register_setting('storefrontchild_pickup', 'storefrontchild_pickup_instructions', array(
+        'type'              => 'string',
+        'sanitize_callback' => 'sanitize_textarea_field',
+    ));
+});
+
+function storefrontchild_pickup_admin_page()
+{
+?>
+    <div class="wrap">
+        <h1>Instructions pour le retrait</h1>
+        <p>Ce texte s'affiche dans le formulaire de validation de commande.</p>
+        <form method="post" action="options.php">
+            <?php settings_fields('storefrontchild_pickup'); ?>
+            <textarea class="large-text" name="storefrontchild_pickup_instructions" rows="8"><?php echo esc_textarea(storefrontchild_pickup_instructions()); ?></textarea>
+            <?php submit_button(); ?>
+        </form>
+    </div>
+<?php
+}
+
+/**
+ * Affiche les instructions dans le formulaire de commande.
+ */
+add_action('woocommerce_checkout_after_customer_details', function () {
+    $text = storefrontchild_pickup_instructions();
+
+    if ('' === $text) {
+        return;
+    }
+?>
+    <section class="pickup-info">
+        <h2 class="pickup-info__title">Instructions pour le retrait</h2>
+        <div class="pickup-info__text"><?php echo wp_kses_post(wpautop(esc_html($text))); ?></div>
+    </section>
+<?php
 });

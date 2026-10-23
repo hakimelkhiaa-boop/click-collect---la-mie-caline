@@ -17,8 +17,8 @@
             height="181">
     </section>
 
-    <section class="selection">
-        <h2 class="selection__title">Notre sélection</h2>
+    <section class="showcase">
+        <h2 class="showcase__title">Notre sélection</h2>
         <?php storefrontchild_category_carousel(0, 'large'); ?>
     </section>
 
