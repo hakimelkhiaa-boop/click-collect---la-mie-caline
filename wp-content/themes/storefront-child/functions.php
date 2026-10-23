@@ -115,6 +115,15 @@ add_action('wp_enqueue_scripts', function () {
         wp_get_theme()->get('Version'),
         true
     );
+    if (function_exists('is_product') && is_product()) {
+        wp_enqueue_script(
+            'storefront-child-product',
+            get_stylesheet_directory_uri() . '/assets/js/product.js',
+            array('jquery'),
+            wp_get_theme()->get('Version'),
+            true
+        );
+    }
 });
 
 /**
@@ -338,4 +347,25 @@ add_filter('body_class', function ($classes) {
         $classes[] = 'layout-wide';
     }
     return $classes;
+});
+/**
+ * Affiche le prix juste avant le bouton "Ajouter au panier"
+ * (produits simples et variables).
+ */
+add_action('woocommerce_before_add_to_cart_button', function () {
+    global $product;
+
+    if (! $product) {
+        return;
+    }
+
+    echo '<p class="product-page__price">' . wp_kses_post($product->get_price_html()) . '</p>';
+}, 5);
+
+/**
+ * Texte de la liste déroulante des options.
+ */
+add_filter('woocommerce_dropdown_variation_attribute_options_args', function ($args) {
+    $args['show_option_none'] = 'Choisir';
+    return $args;
 });

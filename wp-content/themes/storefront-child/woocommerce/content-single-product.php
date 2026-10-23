@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Fiche produit simple (BEM).
+ * Fiche produit (BEM).
  */
 defined('ABSPATH') || exit;
 
@@ -38,11 +38,8 @@ woocommerce_output_all_notices();
 
         <h1 class="product-page__title"><?php echo esc_html(get_the_title()); ?></h1>
 
-        <div class="product-page__buy">
-            <p class="product-page__price"><?php echo wp_kses_post($product->get_price_html()); ?></p>
-            <div class="product-page__cart">
-                <?php woocommerce_template_single_add_to_cart(); ?>
-            </div>
+        <div class="product-page__cart">
+            <?php woocommerce_template_single_add_to_cart(); ?>
         </div>
     </div>
 
