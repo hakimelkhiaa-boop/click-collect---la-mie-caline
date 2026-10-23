@@ -362,8 +362,9 @@ add_filter('body_class', function ($classes) {
     $is_product  = function_exists('is_product') && is_product();
     $is_cart     = function_exists('is_cart') && is_cart();
     $is_checkout = function_exists('is_checkout') && is_checkout();
+    $is_account  = function_exists('is_account_page') && is_account_page();
 
-    if (is_front_page() || $is_shop || $is_product || $is_cart || $is_checkout) {
+    if (is_front_page() || $is_shop || $is_product || $is_cart || $is_checkout || $is_account) {
         $classes[] = 'layout-wide';
     }
     return $classes;
@@ -397,14 +398,14 @@ add_filter('woocommerce_dropdown_variation_attribute_options_args', function ($a
  */
 add_action('wp', function () {
     $is_cart     = function_exists('is_cart') && is_cart();
+    $is_account  = function_exists('is_account_page') && is_account_page();
     $is_checkout = function_exists('is_checkout') && is_checkout()
         && function_exists('is_wc_endpoint_url') && ! is_wc_endpoint_url('order-received');
 
-    if ($is_cart || $is_checkout) {
+    if ($is_cart || $is_checkout || $is_account) {
         remove_action('storefront_page', 'storefront_page_header', 10);
     }
 });
-
 /* ==========================================================
    NOUVEAU : IT-6, instructions pour le retrait (US-6.1)
    ========================================================== */

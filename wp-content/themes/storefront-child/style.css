@@ -1369,6 +1369,295 @@ body {
   margin-bottom: 0;
 }
 
+/* ===== Block : account-page ===== */
+.account-page {
+  max-width: 70rem;
+  margin: 0 auto;
+  padding: 2rem 2rem 4rem;
+}
+
+.account-page__title {
+  margin: 1.5rem 0 3rem;
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+/* ===== Block : auth (connexion / inscription) ===== */
+.auth {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: start;
+}
+
+.auth--single {
+  grid-template-columns: minmax(0, 28rem);
+  justify-content: center;
+}
+
+.auth__col {
+  padding: 0 3rem;
+}
+
+.auth__col--register {
+  border-left: 1px solid rgba(74, 44, 26, 0.3);
+}
+
+.auth__heading {
+  margin: 0 0 1.5rem;
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+
+.auth__text {
+  margin: 0 0 1.25rem;
+  font-size: 0.9rem;
+}
+
+.auth__form {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.auth__field {
+  margin: 0 0 1.25rem;
+}
+
+.auth__label {
+  display: block;
+  margin: 0 0 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.auth .auth__input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.7rem 1rem;
+  border: 1px solid var(--color-brown);
+  border-radius: 0.75rem;
+  background-color: var(--color-white);
+  box-shadow: none;
+  color: var(--color-brown);
+  font-family: var(--font-main);
+  font-size: 0.9rem;
+}
+
+.auth .auth__input:focus {
+  outline: 2px solid var(--color-coral);
+  outline-offset: 1px;
+}
+
+.auth__forgot {
+  margin: 0 0 1.25rem;
+  text-align: right;
+}
+
+.auth__forgot-link {
+  color: var(--color-brown);
+  font-size: 0.8rem;
+  text-decoration: underline;
+}
+
+.auth__remember {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 1.25rem;
+  font-size: 0.8rem;
+}
+
+.auth__details {
+  margin: 0;
+}
+
+.auth__toggle {
+  list-style: none;
+  text-align: center;
+  cursor: pointer;
+}
+
+.auth__toggle::-webkit-details-marker {
+  display: none;
+}
+
+.auth__toggle:focus-visible {
+  outline: 2px solid var(--color-coral);
+  outline-offset: 2px;
+}
+
+.auth__form--register {
+  margin-top: 1.5rem;
+}
+
+.auth .woocommerce-privacy-policy-text p {
+  margin: 0 0 1.25rem;
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+.auth .woocommerce-privacy-policy-text a {
+  color: var(--color-coral);
+}
+
+/* ===== Block : account (espace client connecté) ===== */
+.account {
+  display: grid;
+  grid-template-columns: 14rem 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+
+.account .woocommerce-MyAccount-navigation,
+.account .woocommerce-MyAccount-content {
+  float: none;
+  width: 100%;
+  margin: 0;
+}
+
+.account .woocommerce-MyAccount-navigation ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.account .woocommerce-MyAccount-navigation li {
+  margin: 0 0 0.4rem;
+}
+
+.account .woocommerce-MyAccount-navigation a {
+  display: block;
+  padding: 0.6rem 1rem;
+  border-radius: 2rem;
+  color: var(--color-brown);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.account .woocommerce-MyAccount-navigation a:hover,
+.account .woocommerce-MyAccount-navigation .is-active a {
+  background-color: var(--color-yellow);
+}
+
+.account .woocommerce-MyAccount-content {
+  font-size: 0.9rem;
+}
+
+.account .woocommerce-MyAccount-content a:not(.button) {
+  color: var(--color-coral);
+}
+
+.account .woocommerce-MyAccount-content h2,
+.account .woocommerce-MyAccount-content h3 {
+  margin: 0 0 1rem;
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+
+.account table.shop_table {
+  width: 100%;
+  border: 0;
+  border-collapse: collapse;
+}
+
+.account table.shop_table th,
+.account table.shop_table td {
+  padding: 0.7rem 0.5rem;
+  border: 0;
+  border-bottom: 1px solid rgba(74, 44, 26, 0.15);
+  background: transparent;
+  color: var(--color-brown);
+  font-size: 0.85rem;
+  text-align: left;
+}
+
+.account .woocommerce-MyAccount-content .button,
+.account .woocommerce-MyAccount-content button.button,
+.account .woocommerce-Button {
+  padding: 0.6rem 1.5rem;
+  border: 0;
+  border-radius: 2rem;
+  background-color: var(--color-yellow);
+  color: var(--color-brown);
+  font-family: var(--font-main);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.account .woocommerce-MyAccount-content .button:hover {
+  background-color: var(--color-brown);
+  color: var(--color-yellow);
+}
+
+.account .woocommerce-MyAccount-content input[type="text"],
+.account .woocommerce-MyAccount-content input[type="email"],
+.account .woocommerce-MyAccount-content input[type="tel"],
+.account .woocommerce-MyAccount-content input[type="password"],
+.account .woocommerce-MyAccount-content select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.65rem 1rem;
+  border: 1px solid var(--color-brown);
+  border-radius: 0.75rem;
+  background-color: var(--color-white);
+  box-shadow: none;
+  color: var(--color-brown);
+}
+
+.account .woocommerce-MyAccount-content .form-row {
+  float: none;
+  width: auto;
+  margin: 0 0 1rem;
+  padding: 0;
+}
+
+.account .woocommerce-MyAccount-content label {
+  display: block;
+  margin: 0 0 0.3rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.account .woocommerce-MyAccount-content fieldset {
+  margin: 1.5rem 0;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--color-brown);
+  border-radius: 0.75rem;
+}
+
+.account .woocommerce-Addresses {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.account .woocommerce-Address {
+  float: none;
+  width: auto;
+}
+
+.account-page .woocommerce-message,
+.account-page .woocommerce-info,
+.account-page .woocommerce-error {
+  margin: 0 0 1.5rem;
+  padding: 0.9rem 1.25rem 0.9rem 3.5rem;
+  border: 0;
+  border-radius: 0.75rem;
+  background-color: var(--color-cream);
+  color: var(--color-brown);
+  font-size: 0.85rem;
+}
+
+.account-page .woocommerce-message::before,
+.account-page .woocommerce-info::before,
+.account-page .woocommerce-error::before {
+  color: var(--color-coral);
+}
+
 /* ===== Block : footer ===== */
 .footer {
   padding: 2.5rem 2rem 1.5rem;
@@ -1598,5 +1887,32 @@ body {
   .cart {
     grid-template-columns: 1fr;
     gap: 1.5rem;
+  }
+  .account-page {
+    padding: 1.25rem 1rem 3rem;
+  }
+
+  .auth {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .auth__col {
+    padding: 0;
+  }
+
+  .auth__col--register {
+    padding-top: 2rem;
+    border-top: 1px solid rgba(74, 44, 26, 0.3);
+    border-left: 0;
+  }
+
+  .account {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .account .woocommerce-Addresses {
+    grid-template-columns: 1fr;
   }
 }
