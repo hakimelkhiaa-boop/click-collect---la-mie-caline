@@ -124,6 +124,15 @@ add_action('wp_enqueue_scripts', function () {
             true
         );
     }
+    if (function_exists('is_cart') && is_cart()) {
+        wp_enqueue_script(
+            'storefront-child-cart',
+            get_stylesheet_directory_uri() . '/assets/js/cart.js',
+            array(),
+            wp_get_theme()->get('Version'),
+            true
+        );
+    }
 });
 
 /**
@@ -153,6 +162,9 @@ function storefrontchild_remove_storefront_parts()
     // Barre latérale et barre d'ajout au panier collante de Storefront
     remove_action('woocommerce_sidebar', 'storefront_get_sidebar', 10);
     remove_action('storefront_after_footer', 'storefront_sticky_single_add_to_cart', 999);
+    // Barre latérale des pages et message de panier vide par défaut
+    remove_action('storefront_sidebar', 'storefront_get_sidebar', 10);
+    remove_action('woocommerce_cart_is_empty', 'wc_empty_cart_message', 10);
 }
 add_action('init', 'storefrontchild_remove_storefront_parts');
 
@@ -341,9 +353,11 @@ add_action('storefront_footer', 'storefrontchild_render_footer', 10);
  * Ajoute une classe pour les pages en pleine largeur.
  */
 add_filter('body_class', function ($classes) {
-    $is_shop = function_exists('is_shop') && (is_shop() || is_product_category());
+    $is_shop    = function_exists('is_shop') && (is_shop() || is_product_category());
     $is_product = function_exists('is_product') && is_product();
-    if (is_front_page() || $is_shop || $is_product) {
+    $is_cart    = function_exists('is_cart') && is_cart();
+
+    if (is_front_page() || $is_shop || $is_product || $is_cart) {
         $classes[] = 'layout-wide';
     }
     return $classes;
@@ -368,4 +382,12 @@ add_action('woocommerce_before_add_to_cart_button', function () {
 add_filter('woocommerce_dropdown_variation_attribute_options_args', function ($args) {
     $args['show_option_none'] = 'Choisir';
     return $args;
+});
+/**
+ * Retire le titre de page de Storefront sur le panier.
+ */
+add_action('wp', function () {
+    if (function_exists('is_cart') && is_cart()) {
+        remove_action('storefront_page', 'storefront_page_header', 10);
+    }
 });
